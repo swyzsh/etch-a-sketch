@@ -17,6 +17,7 @@
 /* let page take full height of viewport excess */
 html { height: 100%; } body { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
 
+/* cursors */
 .cursor-normal { cursor: default; }
 .cursor-pen { cursor: url('./metadata/pen-cur.png'), auto; }
 .cursor-pencil { cursor: url('./metadata/pencil-cur.png'), auto; }
@@ -68,3 +69,6 @@ main {
 .toolbar img:active {
   background: none;
 }
+
+/* toolbar buttons pressed */
+.toolbar-pressed { background-color: var(--surface2); }

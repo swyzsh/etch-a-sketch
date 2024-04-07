@@ -40,11 +40,46 @@ document.addEventListener('DOMContentLoaded', ()=> {
     gridHeight();    
   }
 
-
+  /* Toggle Cursor Icons */
+  const eraserBtn = document.getElementById('eraser');
   const pencilBtn = document.getElementById('pencil');
-  pencilBtn.addEventListener('click', ()=> {
-    const drawingBoard = document.getElementById('grid-container');
-    drawingBoard.classList.toggle("cursor-pencil");
+  const penBtn = document.getElementById('pen');
+  const buttons = [eraserBtn, pencilBtn, penBtn];
+  const drawingBoard = document.getElementById('grid-container');
+
+  function toggleCursor(requestedCursor, pressedButton) {
+    const cursorClasses = ["cursor-eraser", "cursor-pencil", "cursor-pen"];
+    const isTogglingOff = drawingBoard.classList.contains(requestedCursor);
+
+    // Remove existing cursor classes from the drawing board
+    drawingBoard.classList.remove(...cursorClasses, "cursor-normal");
+
+    // Add the correct cursor class back if we're not toggling off
+    if (!isTogglingOff) {
+      drawingBoard.classList.add(requestedCursor);
+    } else {
+      drawingBoard.classList.add("cursor-normal");
+    }
+
+    // Manage the toolbar-pressed class for buttons
+    buttons.forEach(button => {
+      if (button === pressedButton && !isTogglingOff) {
+        button.classList.add("toolbar-pressed"); // Add to the clicked button if not toggling off
+      } else {
+        button.classList.remove("toolbar-pressed"); // Remove from all others
+      }
+    });
+    console.log(`changing cursor to ${requestedCursor}`);
+  }
+  
+  eraserBtn.addEventListener('click', function() {
+    toggleCursor("cursor-eraser", this); // pass "this" as the pressed button
+  });
+  pencilBtn.addEventListener('click', function() {
+    toggleCursor("cursor-pencil", this);
+  });
+  penBtn.addEventListener('click', function() {
+    toggleCursor("cursor-pen", this);
   });
 
 });
