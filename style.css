@@ -1,0 +1,70 @@
+/* Global Settings */
+
+@font-face {
+  font-family: '';
+  src: url();
+}
+
+/* color scheme */
+:root {
+  --crust: rgba(24, 25, 38, 1.0);
+  --base: rgba(36, 39, 58, 1.0);
+  --surface2: rgba(91, 96, 120, 1.0);
+  --subtext0: rgba(165, 173, 203, 1.0);
+  --text: rgba(202, 211, 245, 1.0);
+}
+
+/* let page take full height of viewport excess */
+html { height: 100%; } body { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+
+.cursor-normal { cursor: default; }
+.cursor-pen { cursor: url('./metadata/pen-cur.png'), auto; }
+.cursor-pencil { cursor: url('./metadata/pencil-cur.png'), auto; }
+.cursor-eraser { cursor: url('./metadata/eraser-cur.png'), auto; }
+
+/* Primary Content */
+
+body {
+  background-color: var(--crust);
+  color: var(--text);
+}
+
+main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;  
+}
+
+#grid-container {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  height: auto;
+  border: 1px solid var(--text);
+}
+
+.toolbar {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  align-items: center;
+  width: auto;
+  height: auto;
+  border: 1px solid var(--text);
+}
+.toolbar img {
+  width: 16px;
+  height: 16px;
+  padding: 8px;
+  cursor: pointer;
+}
+.toolbar img:hover {
+  background-color: var(--surface2);
+}
+.toolbar img:active {
+  background: none;
+}
