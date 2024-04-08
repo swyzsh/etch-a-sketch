@@ -82,6 +82,65 @@ document.addEventListener('DOMContentLoaded', ()=> {
     toggleCursor("cursor-pen", this);
   });
 
+  /* Changing Grid Size and Pixel Count */
+
+  /* grid dropdown selection */
+  const gridSelectorDropdownBtn = document.getElementById('grid-selector-dropdown');
+  const gridOption1 = document.getElementById('grid-option-1');
+  const gridOption2 = document.getElementById('grid-option-2');
+  const gridCustomForm = document.getElementById('grid-option-custom-form');
+  const gridOptionCustomInput = document.getElementById('grid-option-custom');
+  const submitGridOptionCustom = document.getElementById('submit-grid-option-custom');
+  
+  gridOption1.style.display = 'none';
+  gridOption2.style.display = 'none';
+  gridCustomForm.style.display = 'none';
+  gridOptionCustomInput.style.display = 'block';
+  submitGridOptionCustom.style.display = 'none';
+  let gridDropdown = false;
+
+  gridSelectorDropdownBtn.addEventListener('click', function() {
+    gridDropdown = !gridDropdown;
+    gridOption1.style.display = gridDropdown ? 'block' : 'none';
+    gridOption2.style.display = gridDropdown ? 'block' : 'none';
+    gridCustomForm.style.display = gridDropdown ? 'block' : 'none';
+    submitGridOptionCustom.style.display = gridDropdown ? 'block' : 'none';
+  });
+
+  // prevent dropdown from closing when trying to enter input
+  gridOptionCustomInput.addEventListener('click', function(event) {
+    event.stopPropagation();
+  });
+
+  /* pixel count dropdown selection */
+  const pixelSelectorDropdownBtn = document.getElementById('pixel-selector-dropdown');
+  const pixelOption1 = document.getElementById('pixel-option-1');
+  const pixelOption2 = document.getElementById('pixel-option-2');
+  const pixelCustomForm = document.getElementById('pixel-option-custom-form');
+  const pixelOptionCustomInput = document.getElementById('pixel-option-custom');
+  const submitPixelOptionCustom = document.getElementById('submit-pixel-option-custom');
+  
+  pixelOption1.style.display = 'none';
+  pixelOption2.style.display = 'none';
+  pixelCustomForm.style.display = 'none';
+  pixelOptionCustomInput.style.display = 'block';
+  submitPixelOptionCustom.style.display = 'none';
+  let pixelDropdown = false;
+
+  pixelSelectorDropdownBtn.addEventListener('click', function() {
+    pixelDropdown = !pixelDropdown;
+    pixelOption1.style.display = pixelDropdown ? 'block' : 'none';
+    pixelOption2.style.display = pixelDropdown ? 'block' : 'none';
+    pixelCustomForm.style.display = pixelDropdown ? 'block' : 'none';
+    submitPixelOptionCustom.style.display = pixelDropdown ? 'block' : 'none';
+  });
+
+  // prevent dropdown from closing when trying to enter input
+  pixelOptionCustomInput.addEventListener('click', function(event) {
+    event.stopPropagation();
+  });
+
+
 });
 
 

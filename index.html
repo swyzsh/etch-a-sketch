@@ -7,7 +7,28 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <main>
+
+  <div id="grid-selector-dropdown" style="z-index: 12;">
+    <span>[Selected: ]<br>Grid Size ↓</span>
+    <button type="button" id="grid-option-1">32x32</button>
+    <button type="button" id="grid-option-2">64x64</button>
+    <div id="grid-option-custom-form">
+      <input type="number" id="grid-option-custom" placeholder="Custom Grid Count">
+      <button type="submit" id="submit-grid-option-custom">✓</button>
+    </div>
+  </div>
+   <div id="pixel-selector-dropdown" style="z-index: 12;">
+    <span>[Selected: ]<br>Pixel Size ↓</span>
+    <button type="button" id="pixel-option-1">1px</button>
+    <button type="button" id="pixel-option-2">2px</button>
+    <div id="pixel-option-custom-form">
+      <input type="number" id="pixel-option-custom" placeholder="Custom Pixel Count">
+      <button type="submit" id="submit-pixel-option-custom">✓</button>
+    </div>
+  </div>
+
+  <main style="z-index: 8;">
+    
 
     <div id="grid-container"></div>
 
