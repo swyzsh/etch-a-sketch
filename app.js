@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
         button.classList.remove("toolbar-pressed"); // Remove from all others
       }
     });
-    console.log(`changing cursor to ${requestedCursor}`);
+    console.log(`Changing cursor to ${requestedCursor}, toggling off: ${isTogglingOff}`);
   }
   
   eraserBtn.addEventListener('click', function() {
@@ -140,9 +140,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
     event.stopPropagation();
   });
 
-
 });
-
 
 
 /* Pencil Functionality - draw on the boxes to give pixelated effect */
