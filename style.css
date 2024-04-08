@@ -138,26 +138,28 @@ main {
   border: 1px solid var(--text);
 }
 
-.toolbar {
-  margin-top: 16px;
+#toolbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  margin-bottom: 16px;
   display: flex;
   flex-direction: row;
   gap: 0;
   align-items: center;
-  width: auto;
-  height: auto;
   border: 1px solid var(--text);
 }
-.toolbar img {
+#toolbar img {
   width: 16px;
   height: 16px;
   padding: 8px;
   cursor: pointer;
 }
-.toolbar img:hover {
+#toolbar img:hover {
   background-color: var(--surface2);
 }
-.toolbar img:active {
+#toolbar img:active {
   background: none;
 }
 
