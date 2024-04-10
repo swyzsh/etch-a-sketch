@@ -1,43 +1,64 @@
+let gridSize = 64; // default value 32x32 (/2 because we are adding two different colored pixels )
+let pixelSize = '4px'
+
 document.addEventListener('DOMContentLoaded', ()=> {
 
   /* Grid Style Sketch Board */
   addGrid();
+
+  // take user input on grid selection
+  document.getElementById('grid-option-1').addEventListener('click', function() {
+    gridSize = 64;
+    addGrid();
+  });
+  document.getElementById('grid-option-2').addEventListener('click', function() {
+    gridSize = 128;
+    addGrid();
+  });
+  document.getElementById('submit-grid-option-custom').addEventListener('click', function() {
+    const customSize = parseInt(document.getElementById('grid-option-custom').value, 10);
+    if (!isNaN(customSize)) {
+      gridSize = customSize * 2;
+      addGrid();
+    }
+  });
+
+  // take user input on pixel selection
+  document.getElementById('pixel-option-1').addEventListener('click', function() {
+    pixelSize = '1px';
+    addGrid();
+  });
+  document.getElementById('pixel-option-2').addEventListener('click', function() {
+    pixelSize = '2px';
+    addGrid();
+  });
+  document.getElementById('submit-pixel-option-custom').addEventListener('click', function() {
+    const customPixelSize = parseInt(document.getElementById('pixel-option-custom').value, 10);
+    if (!isNaN(customPixelSize)) {
+        pixelSize = `${customPixelSize}px`;
+        addGrid();
+    }
+  });
+
+  function createGridCell(color) {
+    const div = document.createElement('div');
+    div.style.backgroundColor = color;
+    div.style.width = pixelSize;
+    div.style.height = pixelSize;
+    return div;
+  }
+
   function addGrid() {
-    function createGridCell(color) {
-      const div = document.createElement('div');
-      div.style.backgroundColor = color;
-      div.style.width = '4px';
-      div.style.height = '4px';
-      return div;
+    document.getElementById('grid-container').innerHTML = ''; // Clear existing grid first
+    for (let i = 0; i < gridSize; i++) { // Use dynamic grid size
+        const rowContainer = document.createElement('div');
+        rowContainer.style.display = 'flex';
+        rowContainer.style.flexDirection = 'row';
+        for (let j = 0; j < gridSize; j++) { // Grid size determines both width and height
+            rowContainer.appendChild(createGridCell(i % 2 === j % 2 ? 'var(--subtext0)' : 'var(--surface2)'));
+        }
+        document.getElementById('grid-container').appendChild(rowContainer);
     }
-    function gridWidth1() {
-      const rowContainer1 = document.createElement('grid-row-1');
-      rowContainer1.style.display = 'flex';
-      rowContainer1.style.flexDirection = 'row';
-      for (let i = 0; i < 32; i++) {
-        rowContainer1.appendChild(createGridCell('var(--subtext0'));
-        rowContainer1.appendChild(createGridCell('var(--surface2)'));
-      }
-      return rowContainer1;
-    }
-    function gridWidth2() {
-      const rowContainer2 = document.createElement('grid-row-2');
-      rowContainer2.style.display = 'flex';
-      rowContainer2.style.flexDirection = 'row';
-      for (let i = 0; i < 32; i++) {
-        rowContainer2.appendChild(createGridCell('var(--surface2)'));
-        rowContainer2.appendChild(createGridCell('var(--subtext0)'));
-      }
-      return rowContainer2;
-    }
-    function gridHeight() {
-      const gridContainer = document.getElementById('grid-container');
-      for (let i = 0; i < 32; i++) {
-        gridContainer.appendChild(gridWidth1());
-        gridContainer.appendChild(gridWidth2());
-      }
-    }
-    gridHeight();    
   }
 
   /* Toggle Cursor Icons */
@@ -141,6 +162,15 @@ document.addEventListener('DOMContentLoaded', ()=> {
   });
 
 });
+
+/* 
+
+two standard options for grid size:
+1. 32x32 (frontend) = 8px, 16x16 (backend)
+2. 64x64 (frontend) = 4px, 32x32 (backend)
+
+
+*/
 
 
 /* Pencil Functionality - draw on the boxes to give pixelated effect */
