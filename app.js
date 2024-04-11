@@ -1,5 +1,5 @@
-let gridSize = 64;
-let pixelSize = '4px'
+let gridSize = 100;
+let pixelSize = '6px'
 
 // Change selected Grid/Pixel status span
 function updateGridPixelStatus() {
@@ -54,20 +54,50 @@ document.addEventListener('DOMContentLoaded', ()=> {
     }
   });
 
-  function createGridCell(color) {
+  function originalColor(i, j) {
+    return i % 2 === j % 2 ? 'var(--subtext0)' : 'var(--surface2)';
+  }
+
+  function createGridCell(i, j) {
     const div = document.createElement('div');
+    const color = originalColor(i, j);
     div.style.backgroundColor = color;
     div.style.width = pixelSize;
     div.style.height = pixelSize;
 
-    // add event listeners for mouse movements - pencil tool
-    div.addEventListener('mousedown', pencilDraw);
-    div.addEventListener('mouseenter', continuePencilDraw);
-    div.addEventListener('mouseup', stopPencilDraw);
+    // add event listeners for mouse movements of tools
+    div.addEventListener('mousedown', handleMouseDown);
+    div.addEventListener('mouseenter', handleMouseEnter);
+    div.addEventListener('mouseup', handleMouseUp);
+    
+    // attach original color as a property of the div for the eraser to use
+    div.dataset.originalColor = color;
 
     return div;
   }
-
+  function handleMouseDown(event) {
+    if (currentTool === "cursor-pencil" && toolIsActive) {
+      pencilDraw(event);
+    } else if (currentTool === "cursor-brush" && toolIsActive) {
+      brushDraw(event);
+    } else if (currentTool === "cursor-eraser" && toolIsActive) {
+      eraseDraw(event);
+    }
+  }
+  function handleMouseEnter(event) {
+    if (isDrawing) {
+      if (currentTool === "cursor-pencil") {
+        continuePencilDraw(event);
+      } else if (currentTool === "cursor-brush") {
+        continueBrushDraw(event);
+      } else if (currentTool === "cursor-eraser") {
+        continueErase(event);
+      }
+    }
+  }
+  function handleMouseUp(event) {
+    isDrawing = false;
+  } 
 
   function addGrid() {
     document.getElementById('grid-container').innerHTML = ''; // Clear existing grid first
@@ -76,7 +106,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
         rowContainer.style.display = 'flex';
         rowContainer.style.flexDirection = 'row';
         for (let j = 0; j < gridSize; j++) { // Grid size determines both width and height
-            rowContainer.appendChild(createGridCell(i % 2 === j % 2 ? 'var(--subtext0)' : 'var(--surface2)'));
+          rowContainer.appendChild(createGridCell(i, j));
         }
         document.getElementById('grid-container').appendChild(rowContainer);
     }
@@ -144,15 +174,15 @@ document.addEventListener('DOMContentLoaded', ()=> {
 
   const eraserBtn = document.getElementById('eraser');
   const pencilBtn = document.getElementById('pencil');
-  const penBtn = document.getElementById('pen');
-  const buttons = [eraserBtn, pencilBtn, penBtn];
+  const brushBtn = document.getElementById('brush');
+  const buttons = [eraserBtn, pencilBtn, brushBtn];
   const drawingBoard = document.getElementById('grid-container');
 
   let currentTool = ''; // track tool for use later
   let toolIsActive = false; // track if tool is active
 
   function toggleCursor(requestedCursor, pressedButton) {
-    const cursorClasses = ["cursor-eraser", "cursor-pencil", "cursor-pen"];
+    const cursorClasses = ["cursor-eraser", "cursor-pencil", "cursor-brush"];
     const isTogglingOff = drawingBoard.classList.contains(requestedCursor);
     toolIsActive = !isTogglingOff;
 
@@ -185,8 +215,8 @@ document.addEventListener('DOMContentLoaded', ()=> {
   pencilBtn.addEventListener('click', function() {
     toggleCursor("cursor-pencil", this);
   });
-  penBtn.addEventListener('click', function() {
-    toggleCursor("cursor-pen", this);
+  brushBtn.addEventListener('click', function() {
+    toggleCursor("cursor-brush", this);
   });
 
   // user selected colors for tools
@@ -206,28 +236,74 @@ document.addEventListener('DOMContentLoaded', ()=> {
       event.target.style.backgroundColor = selectedColor;
     }
   }
-  function stopPencilDraw() {
-    if (currentTool === "cursor-pencil" && toolIsActive) {
-      isDrawing = false;
+
+  /* Brush Draw Logic - pen should colors multiple grids around the cursor to form a pen stroke */
+  function brushDraw(event) {
+    if (currentTool === "cursor-brush" && toolIsActive) {
+      isDrawing = true;
+      brushCells(event.target);
+    }
+  }
+  function continueBrushDraw(event) {
+    if (isDrawing && currentTool === "cursor-brush" && toolIsActive) {
+      brushCells(event.target);
+    }
+  }
+  function brushCells(target) {
+    // color the target cell
+    target.style.backgroundColor = selectedColor;
+
+    // retrieve the parent row and the index of the target cell within this row
+    let row = target.parentNode;
+    let index = Array.prototype.indexOf.call(row.children, target);
+
+    // color the next cell in the row if it exists
+    if (index + 1 < row.children.length) {
+      row.children[index + 1].style.backgroundColor = selectedColor;
+    }
+
+    // try to color the corresponding cells in the next row if it exists
+    let nextRow = row.nextElementSibling;
+    if (nextRow && nextRow.children.length > index) {
+      nextRow.children[index].style.backgroundColor = selectedColor;
+      if (index + 1 < nextRow.children.length) {
+        nextRow.children[index + 1].style.backgroundColor = selectedColor;
+      }
     }
   }
 
-  /* Brush Draw Logic - pen should colors multiple grids around the cursor to form a pen stroke */
+  /* Eraser Logic - eraser should revert the select div's color back to original color of said div */
+  function eraseCells(target) {
+    // Calculate the row and column index of the target cell
+    let row = target.parentNode;
+    let rowIndex = Array.prototype.indexOf.call(row.parentNode.children, row);
+    let colIndex = Array.prototype.indexOf.call(row.children, target);
+
+    // Determine the range of cells to erase
+    let startRow = Math.max(rowIndex - 1, 0);
+    let endRow = Math.min(rowIndex + 1, gridSize - 1);
+    let startCol = Math.max(colIndex - 1, 0);
+    let endCol = Math.min(colIndex + 1, gridSize - 1);
+
+    // Loop over the cells in the 3x3 square around the target cell
+    for (let i = startRow; i <= endRow; i++) {
+      let currentRow = row.parentNode.children[i];
+      for (let j = startCol; j <= endCol; j++) {
+        let cell = currentRow.children[j];
+        cell.style.backgroundColor = cell.dataset.originalColor;
+      }
+    }
+  }
+  function eraseDraw(event) {
+    if (currentTool === "cursor-eraser" && toolIsActive) {
+      isDrawing = true;
+      eraseCells(event.target);
+    }
+  }
+  function continueErase(event) {
+    if(isDrawing && currentTool === "cursor-eraser" && toolIsActive) {
+      eraseCells(event.target);
+    }
+  }
 
 });
-
-/* 
-
-two standard options for grid size:
-1. 32x32 (frontend) = 8px, 16x16 (backend)
-2. 64x64 (frontend) = 4px, 32x32 (backend)
-
-
-*/
-
-
-/* Pencil Functionality - draw on the boxes to give pixelated effect */
-
-/* Pen Functionality - draw freeform based on size of pixels selected */
-
-/* Erase any pen/pencil marks */

@@ -36,7 +36,7 @@ input[type=number] {
 
 /* cursors */
 .cursor-normal { cursor: default; }
-.cursor-pen { cursor: url('./metadata/pen-cur.png'), auto; }
+.cursor-brush { cursor: url('./metadata/brush-cur.png'), auto; }
 .cursor-pencil { cursor: url('./metadata/pencil-cur.png'), auto; }
 .cursor-eraser { cursor: url('./metadata/eraser-cur.png'), auto; }
 
@@ -165,3 +165,24 @@ main {
 
 /* toolbar buttons pressed */
 .toolbar-pressed { background-color: var(--surface2) !important; }
+
+#download-button {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin-right: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-family: 'space-bold';
+  font-size: 12px;
+  color: var(--text);
+  background-color: var(--crust);
+  border: 1px solid var(--text);
+  padding: 7px;  
+}
+#download-button:hover {
+  background-color: var(--surface2);
+}
+#download-button:active {
+  background-color: var(--crust);
+}
